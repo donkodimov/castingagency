@@ -1,6 +1,7 @@
 import os
 from sqlalchemy import Column, String, Integer, create_engine, ARRAY, DateTime
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import json
 
 from config import settings
@@ -9,6 +10,7 @@ database_name = "castingagency"
 database_path = settings.DATABASE_URI
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 '''
 setup_db(app)
@@ -20,7 +22,9 @@ def setup_db(app, database_path=database_path):
     app.config["SECRET_KEY"] = '79537d00f4834892986f09a100aa1edf'
     db.app = app
     db.init_app(app)
-    db.create_all()
+    #db.create_all()
+    migrate.init_app(app, db)
+    
 
 '''
 Movies

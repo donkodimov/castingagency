@@ -8,6 +8,8 @@ from config import settings
 
 database_name = "castingagency"
 database_path = settings.DATABASE_URI
+if database_path.startswith("postgres://"):
+  database_path = database_path.replace("postgres://", "postgresql://", 1)
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -34,9 +36,9 @@ class Movie(db.Model):
 
   id = Column(Integer, primary_key=True)
   title = Column(String, nullable = False)
-  genre = Column(ARRAY(String), nullable = False)
-  rating = Column(Integer, nullable = False, default="0")
-  release_date = Column(DateTime, nullable = False)
+  """ genre = Column(ARRAY(String))
+  rating = Column(Integer)
+  release_date = Column(DateTime) """
 
   def __init__(self, title, genre, release_date, rating):
     self.title = title
@@ -64,13 +66,17 @@ class Movie(db.Model):
       'release_date': self.release_date
     }
 
+
+'''
+Actors
+'''
 class Actor(db.Model):
     __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable = False)
-    age = Column(Integer, nullable = False)
-    gender = Column(String, nullable = False)
+    age = Column(Integer)
+    gender = Column(String)
 
     def __init__(self, name, age, gender):
         self.name = name

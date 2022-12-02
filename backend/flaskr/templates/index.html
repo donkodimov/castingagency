@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Casting Agency</title>
+    <link rel="stylesheet" type=text/css href="{{ url_for('static',
+    filename='styles.css') }}" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Casting Agency" />
+</head>
+
+<body>
+    <header>
+        <h1>Casting Agency</h1>
+        <nav></nav>
+    </header>
+
+    <div class="movies-wrapper">
+        <h3>Movies LISTS</h3>
+        <form class="form" id="form-movie">
+            <input type="text" id="description-movie" name="description-movie" />
+            <input type="submit" name="Create" />
+        </form>
+        <div id="errors-movie" class="hidden">Somethind went wrong!</div>
+        <ul id="movies">
+            {% for movie in movies %}
+            <li>
+                <!-- <input class="list-completed" data-id="{{ movie.id }}" type="checkbox" {% if movie.title %} checked
+                    {% endif %} /> -->
+                <a href="/movies/{{ movie.id }}">
+                    {{ movie.title }}
+                </a>
+                <button class="delete-button-movie" data-id="{{ movie.id }}">&cross;</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+<!--     <div class="actors-wrapper">
+        <h4 id="active-movie" data-id=""> TODO Items</h4>
+        <form class="form" id="form-todo">
+            <input type="text" id="description-todo" name="description-todo" />
+            <input type="submit" name="Create" />
+        </form>
+        <div id="errors-todos" class="hidden">Somethind went wrong!</div>
+        <ul class="list" id="todos">
+            {% for todo in todos %}
+            <li>
+                <input class="check-completed" data-id="{{ todo.id }}" type="checkbox" {% if todo.completed %} checked
+                    {% endif %} />
+                {{ todo.description }}
+                <button class="delete-button" data-id="{{ todo.id }}">&cross;</button>
+            </li>
+            {% endfor %}
+        </ul>
+    </div> -->
+
+    <script src="{{url_for('static', filename='app.js')}}"></script>
+</body>
+
+</html>

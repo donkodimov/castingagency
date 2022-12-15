@@ -127,12 +127,12 @@ document.getElementById("form-movie").onsubmit = function (e) {
                               document.getElementById('errors').className = '';
                           })
                   }); */
-const deleteBtns = document.querySelectorAll(".delete-button");
+const deleteBtns = document.querySelectorAll(".delete-button-movie");
 for (let i = 0; i < deleteBtns.length; i++) {
   const btn = deleteBtns[i];
   btn.onclick = function (e) {
-    const todoId = e.target.dataset["id"];
-    fetch("/todo/" + todoId + "/delete", {
+    const movieId = e.target.dataset["id"];
+    fetch("/movies/" + movieId + "/delete", {
       method: "DELETE",
     }).then(function (response) {
       e.target.parentNode.remove();

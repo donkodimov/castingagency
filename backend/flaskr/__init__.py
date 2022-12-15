@@ -68,4 +68,23 @@ def create_app(test_config=None):
         else:
             return jsonify(body)
 
+   
+
+    @app.route("/movies/<movie_id>/delete", methods=['DELETE'])
+    def delete_movie(movie_id):
+        error = False
+        try:
+            Movie.query.filter_by(id=movie_id).delete()
+            db.session.commit()
+        except:
+            db.session.rollback()
+            print(sys.exc_info())
+        finally:
+            db.session.close()
+        if error:
+            abort(500)
+        else:
+            return jsonify({"success": True})
+
+    
     return app

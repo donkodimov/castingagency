@@ -17,7 +17,7 @@
     </header>
 
     <div class="movies-wrapper">
-        <h3>Movies LISTS</h3>
+        <h3>Movies</h3>
         <form class="form" id="form-movie">
             <input type="text" id="description-movie" name="description-movie" />
             <input type="submit" name="Create" />
@@ -37,24 +37,26 @@
         </ul>
     </div>
 
-<!--     <div class="actors-wrapper">
-        <h4 id="active-movie" data-id=""> TODO Items</h4>
-        <form class="form" id="form-todo">
-            <input type="text" id="description-todo" name="description-todo" />
+    <div class="actors-wrapper">
+        <h3 id="active-movie" data-id="">Actors</h3>
+        <form class="form" id="form-actors">
+            <input type="text" id="description-actor" name="description-actor" />
             <input type="submit" name="Create" />
         </form>
-        <div id="errors-todos" class="hidden">Somethind went wrong!</div>
-        <ul class="list" id="todos">
-            {% for todo in todos %}
+        <div id="errors-actors" class="hidden">Somethind went wrong!</div>
+        <ul class="list" id="actors">
+            {% for actor in actors %}
             <li>
-                <input class="check-completed" data-id="{{ todo.id }}" type="checkbox" {% if todo.completed %} checked
-                    {% endif %} />
-                {{ todo.description }}
-                <button class="delete-button" data-id="{{ todo.id }}">&cross;</button>
+                <!-- <input class="check-completed" data-id="{{ actors.id }}" type="checkbox" {% if todo.completed %} checked
+                    {% endif %} /> -->
+                <a href="/actors/{{ movie.id }}">
+                    {{ actor.description }}
+                </a>
+                <button class="delete-button" data-id="{{ actor.id }}">&cross;</button>
             </li>
             {% endfor %}
         </ul>
-    </div> -->
+    </div>
 
     <script src="{{url_for('static', filename='app.js')}}"></script>
 </body>

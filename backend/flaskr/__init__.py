@@ -70,21 +70,27 @@ def create_app(test_config=None):
 
    
 
-    @app.route("/movies/<movie_id>/delete", methods=['DELETE'])
+    @app.route("/movies/<movie_id>", methods=['DELETE'])
     def delete_movie(movie_id):
-        error = False
+        """ error = False
+        body = {}
         try:
             Movie.query.filter_by(id=movie_id).delete()
             db.session.commit()
+            body['id'] = movie_id
         except:
             db.session.rollback()
             print(sys.exc_info())
         finally:
-            db.session.close()
-        if error:
-            abort(500)
+            db.session.close() """
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+        if movie is None:
+            abort(404)
         else:
-            return jsonify({"success": True})
+            movie.delete()
+            return jsonify({
+                "success": True,
+                "movie": movie_id})
 
     
     return app

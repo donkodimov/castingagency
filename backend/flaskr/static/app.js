@@ -132,7 +132,7 @@ for (let i = 0; i < deleteBtns.length; i++) {
   const btn = deleteBtns[i];
   btn.onclick = function (e) {
     const movieId = e.target.dataset["id"];
-    fetch("/movies/" + movieId + "/delete", {
+    fetch("/movies/" + movieId, {
       method: "DELETE",
     }).then(function (response) {
       e.target.parentNode.remove();

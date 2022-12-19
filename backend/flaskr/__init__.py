@@ -20,7 +20,7 @@ def create_app(test_config=None):
             "Access-Control-Allow-Headers", "Content-Type,Authorization,true"
         )
         response.headers.add(
-            "Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"
+            "Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS,PATCH"
         )
         return response
 
@@ -67,22 +67,10 @@ def create_app(test_config=None):
             abort(500)
         else:
             return jsonify(body)
-
    
 
     @app.route("/movies/<movie_id>", methods=['DELETE'])
     def delete_movie(movie_id):
-        """ error = False
-        body = {}
-        try:
-            Movie.query.filter_by(id=movie_id).delete()
-            db.session.commit()
-            body['id'] = movie_id
-        except:
-            db.session.rollback()
-            print(sys.exc_info())
-        finally:
-            db.session.close() """
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         if movie is None:
             abort(404)
@@ -92,5 +80,25 @@ def create_app(test_config=None):
                 "success": True,
                 "movie": movie_id})
 
+    @app.route("/movies/<movie_id>", methods=['PATCH'])
+    def patch_movie(movie_id):
+
+        body = request.get_json()
+        new_title = body.get("title", None)
+        movie = Movie.query.filter(Movie.id == movie_id).first_or_404()
+
+        try:
+            if new_title:
+                movie.title = new_title
+            movie.update()
+        
+        except Exception as e:
+            print(e)
+            abort(422)
     
+        return jsonify({
+            "success": True,
+            "movie": movie.title
+        }), 200
+
     return app

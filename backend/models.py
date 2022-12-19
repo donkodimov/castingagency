@@ -1,7 +1,8 @@
 import os
-from sqlalchemy import Column, String, Integer, create_engine, ARRAY, DateTime
+from sqlalchemy import Column, String, Integer, create_engine, ARRAY, DateTime, ForeignKey
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from datetime import datetime
 import json
 
 from config import settings
@@ -26,46 +27,74 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     #db.create_all()
     migrate.init_app(app, db)
-    
+
 
 '''
-Movies
+drop_and_init_db()
+This will delete all entries and will create new ones.
 '''
-class Movie(db.Model):  
-  __tablename__ = 'movies'
+def drop_and_init_db(app):
+    with app.app_context():
+      db.drop_all()
+      db.create_all()
 
-  id = Column(Integer, primary_key=True)
-  title = Column(String, nullable = False)
-  """ genre = Column(ARRAY(String))
-  rating = Column(Integer)
-  release_date = Column(DateTime) """
+      first_entry = Movie(
+        title="Rainy Temple",
+        release_date="2023-01-25 15:20:00",
+      )
+      first_entry.insert()
 
-  def __init__(self, title, genre, release_date, rating):
-    self.title = title
-    self.genre = genre
-    self.rating = rating
-    self.release_date = release_date
+      second_entry = Movie(
+        title="Messi's Way",
+        release_date="2023-01-25 15:20:00",
+      )
+      second_entry.insert()
 
-  def insert(self):
-    db.session.add(self)
-    db.session.commit()
-  
-  def update(self):
-    db.session.commit()
+      third_entry = Movie(
+        title="Most Wanted",
+        release_date="2023-01-25 15:20:00",
+      )
+      third_entry.insert()
 
-  def delete(self):
-    db.session.delete(self)
-    db.session.commit()
+      first_actor = Actor(
+          name='Arturo Valdes', 
+          age=26, 
+          gender='Male'
+          )
+      first_actor.insert()
 
-  def format(self):
-    return {
-      'id': self.id,
-      'title': self.title,
-      'genre': self.genre,
-      'rating': self.rating,
-      'release_date': self.release_date
-    }
+      second_actor = Actor(
+          name='Viki Jones', 
+          age=34, 
+          gender='Female'
+          )
+      second_actor.insert()
 
+      third_actor = Actor(
+          name='Goran Snipe', 
+          age=12, 
+          gender='Male'
+          )
+      third_actor.insert()
+
+      first_performance = performance.insert().values(
+          actor_id=3, 
+          movie_id=1
+          )
+      db.session.execute(first_performance)
+      db.session.commit()
+
+
+'''
+Performance
+
+This table associates the Movie model and the Actor model.
+'''
+
+performance = db.Table('performance',
+    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), primary_key=True),
+    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), primary_key=True)
+)   
 
 '''
 Actors
@@ -75,8 +104,8 @@ class Actor(db.Model):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable = False)
-    age = Column(Integer)
-    gender = Column(String)
+    age = Column(Integer, nullable = False)
+    gender = Column(String, nullable = False)
 
     def __init__(self, name, age, gender):
         self.name = name
@@ -101,4 +130,36 @@ class Actor(db.Model):
         'age': self.age,
         'gender': self.gender
         }
-    
+
+'''
+Movies
+'''
+class Movie(db.Model):  
+  __tablename__ = 'movies'
+
+  id = Column(Integer, primary_key=True)
+  title = Column(String, nullable = False)
+  release_date = Column(DateTime, default=datetime.now(), nullable=False)
+  actor = db.relationship('Actor', secondary=performance, lazy='select', backref=db.backref('movies', lazy=True))
+
+  def __init__(self, title, release_date):
+    self.title = title
+    self.release_date = release_date
+
+  def insert(self):
+    db.session.add(self)
+    db.session.commit()
+  
+  def update(self):
+    db.session.commit()
+
+  def delete(self):
+    db.session.delete(self)
+    db.session.commit()
+
+  def format(self):
+    return {
+      'id': self.id,
+      'title': self.title,
+      'release_date': self.release_date
+    }

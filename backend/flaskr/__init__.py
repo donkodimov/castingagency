@@ -3,7 +3,7 @@ from flask import Flask, request, abort, jsonify, redirect, url_for, render_temp
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 
-from models import setup_db, Movie, Actor, db
+from models import setup_db, Movie, Actor, db, drop_and_init_db
 
 
 
@@ -13,6 +13,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     setup_db(app)
     CORS(app, resources={r"*": {"origins": "*"}})
+
+    drop_and_init_db(app)
 
     @app.after_request
     def after_request(response):
@@ -53,10 +55,12 @@ def create_app(test_config=None):
         body = {}
         try:
             title = request.get_json()['title']
-            movie = Movie(title=title, genre="genre", release_date="release_date", rating=5)
+            release_date = request.get_json()['release_date']
+            movie = Movie(title=title, release_date=release_date)
             movie.insert()
             body['id'] = movie.id
             body['title'] = movie.title
+
         except ValueError as e:
             error = True
             db.session.rollback()
@@ -102,3 +106,5 @@ def create_app(test_config=None):
         }), 200
 
     return app
+
+    

@@ -84,14 +84,17 @@ document.getElementById("form-todo").onsubmit = function (e) {
     });
 }; */
 const descInputMovie = document.getElementById("description-movie");
+const relDateInput = document.getElementById("release-date");
 document.getElementById("form-movie").onsubmit = function (e) {
   e.preventDefault();
   const title = descInputMovie.value;
+  const relDate = relDateInput.value;
   descInputMovie.value = "";
   fetch("/movies/create", {
     method: "POST",
     body: JSON.stringify({
       title: title,
+      release_date: relDate
     }),
     headers: {
       "Content-Type": "application/json",

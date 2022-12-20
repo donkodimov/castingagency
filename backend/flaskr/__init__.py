@@ -166,6 +166,36 @@ def create_app(test_config=None):
                 "actor": actor_id
             }), 200
 
+    
+    @app.route("/actors/<actor_id>", methods=['PATCH'])
+    def patch_actor(actor_id):
+
+        body = request.get_json()
+        new_name = body.get("name", None)
+        new_age = body.get("age", None)
+        new_gender = body.get("gender", None)
+        actor = Actor.query.filter(Actor.id == actor_id).first_or_404()
+
+        try:
+            if new_name:
+                actor.name = new_name
+            if new_age:
+                actor.age = new_age
+            if new_gender:
+                actor.gender = new_gender
+            actor.update()
+        
+        except Exception as e:
+            print(e)
+            abort(422)
+    
+        return jsonify({
+            "success": True,
+            "name": actor.name,
+            "age": actor.age,
+            "gender": actor.gender
+        }), 200
+
 
     return app
 

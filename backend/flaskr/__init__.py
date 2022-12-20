@@ -105,6 +105,22 @@ def create_app(test_config=None):
             "movie": movie.title
         }), 200
 
+#  Actors
+#  ----------------------------------------------------------------
+
+    @app.route("/actors/<actor_id>", methods=['DELETE'])
+    def delete_actor(actor_id):
+
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+        if actor is None:
+            abort(404)
+        else:
+            actor.delete()
+            return jsonify({
+                "success": True,
+                "actor": actor_id
+            })
+
     return app
 
     

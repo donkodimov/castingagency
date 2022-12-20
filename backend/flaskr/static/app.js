@@ -142,12 +142,12 @@ for (let i = 0; i < deleteBtns.length; i++) {
     });
   };
 }
-const deleteBtnsLst = document.querySelectorAll(".delete-button-list");
-for (let i = 0; i < deleteBtnsLst.length; i++) {
-  const btn = deleteBtnsLst[i];
+const deleteBtnsAct = document.querySelectorAll(".delete-button-actor");
+for (let i = 0; i < deleteBtnsAct.length; i++) {
+  const btn = deleteBtnsAct[i];
   btn.onclick = function (e) {
-    const listId = e.target.dataset["id"];
-    fetch("/lists/" + listId + "/delete", {
+    const actorId = e.target.dataset["id"];
+    fetch("/actors/" + actorId, {
       method: "DELETE",
     }).then(function (response) {
       e.target.parentNode.remove();

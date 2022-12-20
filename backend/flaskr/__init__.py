@@ -26,9 +26,11 @@ def create_app(test_config=None):
         )
         return response
 
+
 # ----------------------------------------------------------------------------#
 # Controllers.
 # ----------------------------------------------------------------------------#
+
 
     @app.route("/")
     def index():
@@ -37,6 +39,7 @@ def create_app(test_config=None):
 
 #  Movies
 #  ----------------------------------------------------------------
+
 
     @app.route("/movies/<movie_id>")
     def get_movie(movie_id):
@@ -48,6 +51,7 @@ def create_app(test_config=None):
             active_movie=Movie.query.get(movie_id),
             actors=Actor.query.order_by('id').all()
             )
+
 
     @app.route("/movies/create", methods=['POST'])
     def create_movies():
@@ -84,6 +88,7 @@ def create_app(test_config=None):
                 "success": True,
                 "movie": movie_id})
 
+
     @app.route("/movies/<movie_id>", methods=['PATCH'])
     def patch_movie(movie_id):
 
@@ -105,8 +110,48 @@ def create_app(test_config=None):
             "movie": movie.title
         }), 200
 
+
 #  Actors
 #  ----------------------------------------------------------------
+
+
+    @app.route("/actors/<actor_id>")
+    def get_actor(actor_id):
+
+        actor = Actor.query.get(actor_id)
+
+        return jsonify({
+                "success": True,
+                "id": actor.id,
+                "actor": actor.name
+            }), 200
+
+
+    @app.route("/actors/create", methods=['POST'])
+    def create_actor():
+        error = False
+        body = {}
+        try:
+            name = request.get_json()['name']
+            age = request.get_json()['age']
+            gender = request.get_json()['gender']
+            actor = Actor(name=name, age=age, gender=gender)
+            actor.insert()
+            body['id'] = actor.id
+            body['name'] = actor.name
+            print(body)
+
+        except ValueError as e:
+            error = True
+            db.session.rollback()
+            print(sys.exc_info())
+        finally:
+            db.session.close()
+        if error:
+            abort(500)
+        else:
+            return jsonify(body)
+
 
     @app.route("/actors/<actor_id>", methods=['DELETE'])
     def delete_actor(actor_id):
@@ -119,7 +164,8 @@ def create_app(test_config=None):
             return jsonify({
                 "success": True,
                 "actor": actor_id
-            })
+            }), 200
+
 
     return app
 

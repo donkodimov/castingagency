@@ -50,18 +50,24 @@ for (let i = 0; i < checkboxesList.length; i++) {
       });
   };
 } */
-/* const descInput = document.getElementById("description-todo");
-const activeList = document.getElementById("active-list");
-document.getElementById("form-todo").onsubmit = function (e) {
+const descInputActor = document.getElementById("description-actor");
+const descInputAge = document.getElementById("age-actor");
+const descInputGender = document.getElementById("gender");
+document.getElementById("form-actors").onsubmit = function (e) {
   e.preventDefault();
-  const desc = descInput.value;
-  const actList = activeList.dataset["id"];
-  descInput.value = "";
-  fetch("/todo/create", {
+  const desc = descInputActor.value;
+  const age = descInputAge.value;
+  const gender = descInputGender.value;
+  descInputActor.value = "";
+  descInputAge.value = "";
+  descInputGender.value = "";
+  fetch("/actors/create", {
     method: "POST",
     body: JSON.stringify({
-      description: desc,
-      active_list: actList,
+      name: desc,
+      age: age,
+      gender: gender
+  /*     active_list: actList, */
     }),
     headers: {
       "Content-Type": "application/json",
@@ -74,15 +80,15 @@ document.getElementById("form-todo").onsubmit = function (e) {
       console.log("response", jsonResponse);
       li = document.createElement("li");
       li.innerText = desc;
-      document.getElementById("todos").appendChild(li);
-      document.getElementById("errors-todos").className = "hidden";
+      document.getElementById("actors").appendChild(li);
+      document.getElementById("errors-actors").className = "hidden";
       window.location.reload(true);
     })
     .catch(function (err) {
       console.log(err);
       document.getElementById("errors-todos").className = "";
     });
-}; */
+};
 const descInputMovie = document.getElementById("description-movie");
 const relDateInput = document.getElementById("release-date");
 document.getElementById("form-movie").onsubmit = function (e) {

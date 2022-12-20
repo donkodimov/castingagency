@@ -47,8 +47,24 @@
     <div class="actors-wrapper">
         <h3 id="active-movie" data-id="">Actors</h3>
         <form class="form" id="form-actors">
-            <input type="text" id="description-actor" name="description-actor" />
+            <fieldset>
+                <label for="first-name">Name:
+                    <input type="text" id="description-actor" name="description-actor" />
+                </label>
+                <label for="first-name">Age:
+                    <input type="number" min=12 max=120 id="age-actor" name="age-actor" />
+                </label>
+                <label for="first-name">Gender:
+                    <select name="gender" id="gender">
+                        <option value="">select one</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+
+                </label>
+            
             <input type="submit" name="Create" />
+            </fieldset>
         </form>
         <div id="errors-actors" class="hidden">Somethind went wrong!</div>
         <ul class="list" id="actors">

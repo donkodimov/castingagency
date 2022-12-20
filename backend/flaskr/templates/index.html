@@ -21,10 +21,10 @@
         <form class="form" id="form-movie">
             <fieldset>
                 <label for="first-name">Name:
-                    <input type="text" id="description-movie" name="description-movie" />
+                    <input type="text" id="description-movie" name="description-movie" required/>
                 </label>
                 <label for="first-name">Release date:
-                    <input type="date" id="release-date" name="release-date" />
+                    <input type="date" id="release-date" name="release-date" required/>
                 </label>
                     <input type="submit" name="Create" />
             </fieldset>
@@ -49,13 +49,13 @@
         <form class="form" id="form-actors">
             <fieldset>
                 <label for="first-name">Name:
-                    <input type="text" id="description-actor" name="description-actor" />
+                    <input type="text" id="description-actor" name="description-actor" required />
                 </label>
                 <label for="first-name">Age:
-                    <input type="number" min=12 max=120 id="age-actor" name="age-actor" />
+                    <input type="number" min=12 max=120 id="age-actor" name="age-actor" required />
                 </label>
                 <label for="first-name">Gender:
-                    <select name="gender" id="gender">
+                    <select name="gender" id="gender" required >
                         <option value="">select one</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>

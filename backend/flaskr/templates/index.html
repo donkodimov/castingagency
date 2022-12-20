@@ -19,8 +19,15 @@
     <div class="movies-wrapper">
         <h3>Movies</h3>
         <form class="form" id="form-movie">
-            <input type="text" id="description-movie" name="description-movie" />
-            <input type="submit" name="Create" />
+            <fieldset>
+                <label for="first-name">Name:
+                    <input type="text" id="description-movie" name="description-movie" />
+                </label>
+                <label for="first-name">Release date:
+                    <input type="date" id="release-date" name="release-date" />
+                </label>
+                    <input type="submit" name="Create" />
+            </fieldset>
         </form>
         <div id="errors-movie" class="hidden">Somethind went wrong!</div>
         <ul id="movies">
@@ -47,10 +54,10 @@
         <ul class="list" id="actors">
             {% for actor in actors %}
             <li>
-                <!-- <input class="check-completed" data-id="{{ actors.id }}" type="checkbox" {% if todo.completed %} checked
+                <!-- <input class="check-completed" data-id="{{ actors.id }}" type="checkbox" {% if actor.name %} checked
                     {% endif %} /> -->
-                <a href="/actors/{{ movie.id }}">
-                    {{ actor.description }}
+                <a href="/actors/{{ actor.id }}">
+                    {{ actor.name }}
                 </a>
                 <button class="delete-button" data-id="{{ actor.id }}">&cross;</button>
             </li>

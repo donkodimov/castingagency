@@ -45,8 +45,8 @@ def create_app(test_config=None):
 
         return render_template('index.html',
             movies=Movie.query.order_by('id').all(),
-            #active_movie=Movie.query.get(movie_id),
-            #actors=Actor.query.filter_by(movie_id=movie_id).order_by('id').all()
+            active_movie=Movie.query.get(movie_id),
+            actors=Actor.query.order_by('id').all()
             )
 
     @app.route("/movies/create", methods=['POST'])

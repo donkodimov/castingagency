@@ -74,7 +74,7 @@ def create_app(test_config=None):
         if error:
             abort(500)
         else:
-            return jsonify(body)
+            return jsonify(body), 200
    
 
     @app.route("/movies/<movie_id>", methods=['DELETE'])
@@ -86,7 +86,7 @@ def create_app(test_config=None):
             movie.delete()
             return jsonify({
                 "success": True,
-                "movie": movie_id})
+                "movie": movie_id}), 200
 
 
     @app.route("/movies/<movie_id>", methods=['PATCH'])
@@ -150,7 +150,7 @@ def create_app(test_config=None):
         if error:
             abort(500)
         else:
-            return jsonify(body)
+            return jsonify(body), 200
 
 
     @app.route("/actors/<actor_id>", methods=['DELETE'])
@@ -195,6 +195,50 @@ def create_app(test_config=None):
             "age": actor.age,
             "gender": actor.gender
         }), 200
+
+    
+#  Error Handling
+#  ----------------------------------------------------------------
+
+    @app.errorhandler(401)
+    def notfound(error):
+        return jsonify({
+            "success": False,
+            "error": 401,
+            "message": "Unauthorized"
+        }), 401
+
+    @app.errorhandler(403)
+    def notfound(error):
+        return jsonify({
+            "success": False,
+            "error": 403,
+            "message": "Forbidden"
+        }), 403
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "Unprocessable"
+        }), 422
+
+    @app.errorhandler(404)
+    def notfound(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "Not Found"
+        }), 404
+
+    @app.errorhandler(405)
+    def notfound(error):
+        return jsonify({
+            "success": False,
+            "error": 405,
+            "message": "Method Not Allowed"
+        }), 405
 
 
     return app

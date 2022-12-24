@@ -7,7 +7,7 @@ import json
 
 from config import settings
 
-database_name = "castingagency"
+database_name = settings.POSTGRES_DB
 database_path = settings.DATABASE_URI
 if database_path.startswith("postgres://"):
   database_path = database_path.replace("postgres://", "postgresql://", 1)

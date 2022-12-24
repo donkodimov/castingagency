@@ -3,11 +3,12 @@ from flask import request, abort
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
+from config import settings
 
 
-AUTH0_DOMAIN = 'testmacina.eu.auth0.com'
-ALGORITHMS = ['RS256']
-API_AUDIENCE = 'castagenAPI'
+AUTH0_DOMAIN = settings.AUTH0_DOMAIN
+ALGORITHMS = settings.ALGORITHMS
+API_AUDIENCE = settings.API_AUDIENCE
 
 ## AuthError Exception
 '''
@@ -142,10 +143,10 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            try:
-                payload = verify_decode_jwt(token)
-            except:
-                abort(401)
+            #try:
+            payload = verify_decode_jwt(token)
+            """ except:
+                abort(401) """
 
             check_permissions(permission, payload)
 

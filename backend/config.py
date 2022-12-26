@@ -18,4 +18,7 @@ class Settings:
     ALGORITHMS : str = os.getenv("ALGORITHMS")
     API_AUDIENCE = str = os.getenv("API_AUDIENCE")
 
+    PRODUCER = str = os.getenv("PRODUCER")
+    POSTGRES_DB_TEST : str = os.getenv("POSTGRES_DB_TEST","tdd")
+
 settings = Settings()

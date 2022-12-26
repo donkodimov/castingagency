@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 from functools import wraps
 
-from models import setup_db, Movie, Actor, db, drop_and_init_db
+from models import setup_db, Movie, Actor, Performance, db, drop_and_init_db
 from auth import *
 
 
@@ -220,7 +220,86 @@ def create_app(test_config=None):
             "gender": actor.gender
         }), 200
 
+
+#  Perfermance
+#  ----------------------------------------------------------------
+
+    @app.route("/performances")
+    @requires_auth('get:performance')
+    def get_perfermance(payload):
+
+        
+        performance_info = []
+        try:
+            performances = db.session.query(Performance).all()
+            if len(performances) == 0:
+                return jsonify({
+                    'success': False,
+                    'message': 'No records were found'
+                })
+            
+            else:
+                for performance in performances:
+                    movie = Movie.query.filter_by(id = performance.movie_id).first()
+                    actor = Actor.query.filter_by(id = performance.actor_id).first()
+                
+                    performance_info.append({
+                        'movie_id': performance.movie_id,
+                        'movie_title': movie.title,
+                        'movie_release_date': movie.release_date.strftime("%B %d %Y %H:%M:%S"),
+                        'actor_id': performance.actor_id,
+                        'actor_name': actor.name,
+                        'actor_age': actor.age,
+                        'actor_gender': actor.gender
+                    })
+
+            return jsonify({
+                "success": True,
+                "performance_details": performance_info,
+                "total perfermances": len(performances)
+            }), 200
+        
+        except:
+            abort(422)
+
     
+    @app.route("/performance", methods=['POST'])
+    @requires_auth('post:performance')
+    def create_performance(payload):
+        
+        error = False
+        body = {}
+        actor_id = request.get_json()['actor_id']
+        movie_id = request.get_json()['movie_id']
+        print(actor_id, movie_id)
+
+        try:
+
+            performance = Performance.insert().values(actor_id=actor_id, movie_id=movie_id)
+            db.session.execute(performance)
+            db.session.commit()
+
+        except ValueError as e:
+            error = True
+            db.session.rollback()
+            print(sys.exc_info())
+
+        finally:
+            db.session.close()
+
+        if error:
+            abort(500)
+
+        else:
+            return jsonify({
+                "success": True,
+                "actor_id": actor_id,
+                "movie_id": movie_id
+            }), 200
+
+        
+
+
 #  Error Handling
 #  ----------------------------------------------------------------
 

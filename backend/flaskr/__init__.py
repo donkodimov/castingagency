@@ -121,6 +121,51 @@ def create_app(test_config=None):
 #  ----------------------------------------------------------------
 
 
+    @app.route("/actors")
+    @requires_auth('get:actors')
+    def get_actors(payload):
+
+        
+        actors_info = []
+        try:
+            actors = db.session.query(Actor).all()
+            if len(actors) == 0:
+                return jsonify({
+                    'success': False,
+                    'message': 'No records were found'
+                })
+            
+            else:
+                for actor in actors:
+                                    
+                    actors_info.append({
+                        'casting:': [
+                            {
+                                "movie_id": x.id,
+                                "movie_title": x.title,
+                                "movie_release_date": x.release_date.strftime("%B %d %Y %H:%M:%S")
+                            }
+                            for x in actor.movies
+                        ],
+                        'actor_id': actor.id,
+                        'actor_name': actor.name,
+                        'actor_age': actor.age,
+                        'actor_gender': actor.gender
+                    })
+
+            return jsonify({
+                "success": True,
+                "actor_details": actors_info,
+                "total actors": len(actors)
+            }), 200
+        
+        except ValueError as e:
+            
+            db.session.rollback()
+            print(sys.exc_info())
+            abort(422)
+
+
     @app.route("/actors/<actor_id>")
     @requires_auth('get:actors')
     def get_actor(payload, actor_id):

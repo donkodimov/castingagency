@@ -37,6 +37,15 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue(data["actor"]) 
     
+    def test_get_all_actors(self):
+        res = self.client().get("/actors", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue([data["actor_details"]])
+    
+    
 
     def test_get_performance(self):
         res = self.client().get("/performances", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})

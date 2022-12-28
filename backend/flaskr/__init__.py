@@ -43,6 +43,53 @@ def create_app(test_config=None):
 #  ----------------------------------------------------------------
 
 
+    @app.route("/movies")
+    @requires_auth('get:movies')
+    def get_movies(payload):
+
+        
+        movies_info = []
+        try:
+            movies = db.session.query(Movie).all()
+            if len(movies) == 0:
+                return jsonify({
+                    'success': False,
+                    'message': 'No records were found'
+                }), 404
+            
+            else:
+                for movie in movies:
+                    
+                    #actors = Actor.query.filter(Movie.id == movie.id)
+                                    
+                    movies_info.append({
+                        'actors:': [
+                            {
+                                "actor_id": x.id,
+                                "actor_name": x.name,
+                                "actor_age": x.age,
+                                "actor_gender": x.gender
+                            }
+                            for x in movie.actor
+                        ],
+                        'movie_id': movie.id,
+                        'movie_title': movie.title,
+                        'movie_release_date': movie.release_date.strftime("%B %d %Y %H:%M:%S")
+                    })
+
+            return jsonify({
+                "success": True,
+                "movie_details": movies_info,
+                "total actors": len(movies)
+            }), 200
+        
+        except ValueError as e:
+            
+            db.session.rollback()
+            print(sys.exc_info())
+            abort(422)
+
+
     @app.route("/movies/<movie_id>")
     @requires_auth('get:movies')
     def get_movie(payload, movie_id):

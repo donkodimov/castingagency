@@ -19,6 +19,8 @@ class Settings:
     API_AUDIENCE = str = os.getenv("API_AUDIENCE")
 
     PRODUCER = str = os.getenv("PRODUCER")
+    DIRECTOR = str = os.getenv("DIRECTOR")
+    ASSISTANT = str = os.getenv("ASSISTANT")
     POSTGRES_DB_TEST : str = os.getenv("POSTGRES_DB_TEST","tdd")
 
 settings = Settings()

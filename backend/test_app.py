@@ -18,6 +18,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.database_name = settings.POSTGRES_DB_TEST
         self.database_path = "postgresql://{}/{}".format('localhost:5432', self.database_name)
         self.producer_token = settings.PRODUCER
+        self.director_token = settings.DIRECTOR
+        self.assistant_token = settings.ASSISTANT
         
         setup_db(self.app, self.database_path)
         #drop_and_init_db(self.app)
@@ -32,6 +34,8 @@ class CastingAgencyTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
+
+#================MOVIES TESTS==================================================#
 
 #__________Test for success behavior of endpoint GET /movies___________________#
 
@@ -78,6 +82,46 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
+#__________Test for error behavior of endpoint DELETE /movies/<movie_id>_______#
+
+    def test_delete_one_movie_401(self):
+        res = self.client().delete("/movies/1", headers={'Authorization': 'Bearer {}'.format(self.assistant_token)})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for success behavior of endpoint POST /movies/create___________#
+
+    def test_create_one_movie(self):
+        res = self.client().post(
+            "/movies/create",
+            json={"title":"Casablanca", "release_date":"2023-01-25 15:20:00"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue([data["title"]])
+
+#__________Test for error behavior of endpoint POST /movies/create_____________#
+
+    def test_create_one_movie_400(self):
+        res = self.client().post(
+            "/movies/create",
+            json={"title":"Casablanca"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#================ACTORS TESTS==================================================#
+
 #__________Test for success behavior of endpoint GET /actor/<actor_id>_________#
 
     def test_get_actor_id(self):
@@ -97,6 +141,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertTrue([data["actor_details"]])
+
+#================PERFORMANCE TESTS=============================================#
     
 #__________Test for success behavior of endpoint GET /performance______________#
 

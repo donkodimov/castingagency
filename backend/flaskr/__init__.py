@@ -115,16 +115,27 @@ def create_app(test_config=None):
             movie.insert()
             body['id'] = movie.id
             body['title'] = movie.title
+        
+        except KeyError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
 
         except ValueError as e:
             error = True
+            status_code = 500
             db.session.rollback()
             print(sys.exc_info())
+        
         finally:
             db.session.close()
+        
         if error:
-            abort(500)
+            abort(status_code)
+        
         else:
+            body['success'] = True
             return jsonify(body), 200
    
 
@@ -394,6 +405,14 @@ def create_app(test_config=None):
 
 #  Error Handling
 #  ----------------------------------------------------------------
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 400,
+            "message": "Bad Request"
+        }), 400
 
     @app.errorhandler(401)
     def unauthorized(error):

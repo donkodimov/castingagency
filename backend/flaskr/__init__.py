@@ -1,6 +1,7 @@
 import os, sys
 from flask import Flask, request, abort, jsonify, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import DataError, IntegrityError
 from flask_cors import CORS, cross_origin
 from functools import wraps
 
@@ -122,7 +123,7 @@ def create_app(test_config=None):
             db.session.rollback()
             print(sys.exc_info())
 
-        except ValueError as e:
+        except ValueError:
             error = True
             status_code = 500
             db.session.rollback()
@@ -155,23 +156,47 @@ def create_app(test_config=None):
     @app.route("/movies/<movie_id>", methods=['PATCH'])
     @requires_auth('post:movies')
     def patch_movie(payload, movie_id):
-
-        body = request.get_json()
-        new_title = body.get("title", None)
-        movie = Movie.query.filter(Movie.id == movie_id).first_or_404()
-
+        
+        error = False
         try:
+            body = request.get_json()
+            new_title = body.get("title", None)
+            new_release_date = body.get('release_date', None)
+            movie = Movie.query.filter(Movie.id == movie_id).first_or_404()
             if new_title:
                 movie.title = new_title
+            if new_release_date:
+                movie.release_date = new_release_date
             movie.update()
         
-        except Exception as e:
-            print(e)
-            abort(422)
+        except KeyError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+
+        except DataError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+        
+        except ValueError:
+            error = True
+            status_code = 500
+            db.session.rollback()
+            print(sys.exc_info())
+
+        finally:
+            db.session.close()
+        
+        if error == True:
+            abort(status_code)
     
         return jsonify({
             "success": True,
-            "movie": movie.title
+            "movie": new_title,
+            "release_date": new_release_date
         }), 200
 
 
@@ -191,7 +216,7 @@ def create_app(test_config=None):
                 return jsonify({
                     'success': False,
                     'message': 'No records were found'
-                })
+                }), 404
             
             else:
                 for actor in actors:
@@ -214,7 +239,7 @@ def create_app(test_config=None):
             return jsonify({
                 "success": True,
                 "actor_details": actors_info,
-                "total actors": len(actors)
+                "total_actors": len(actors)
             }), 200
         
         except ValueError as e:

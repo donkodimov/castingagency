@@ -291,15 +291,30 @@ def create_app(test_config=None):
             body['name'] = actor.name
             print(body)
 
-        except ValueError as e:
+        except KeyError:
             error = True
+            status_code = 400
             db.session.rollback()
             print(sys.exc_info())
+
+        except DataError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+        
+        except ValueError:
+            error = True
+            status_code = 500
+            db.session.rollback()
+            print(sys.exc_info())
+
         finally:
             db.session.close()
         if error:
-            abort(500)
+            abort(status_code)
         else:
+            body['success'] = True
             return jsonify(body), 200
 
 
@@ -364,7 +379,7 @@ def create_app(test_config=None):
                 return jsonify({
                     'success': False,
                     'message': 'No records were found'
-                })
+                }), 404
             
             else:
                 for performance in performances:
@@ -384,7 +399,7 @@ def create_app(test_config=None):
             return jsonify({
                 "success": True,
                 "performance_details": performance_info,
-                "total perfermances": len(performances)
+                "total_performances": len(performances)
             }), 200
         
         except:

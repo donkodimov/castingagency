@@ -411,19 +411,34 @@ def create_app(test_config=None):
     def create_performance(payload):
         
         error = False
-        body = {}
-        actor_id = request.get_json()['actor_id']
-        movie_id = request.get_json()['movie_id']
-        print(actor_id, movie_id)
-
         try:
-
+            actor_id = request.get_json()['actor_id']
+            movie_id = request.get_json()['movie_id']
             performance = Performance.insert().values(actor_id=actor_id, movie_id=movie_id)
             db.session.execute(performance)
             db.session.commit()
 
-        except ValueError as e:
+        except KeyError:
             error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+
+        except DataError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+
+        except IntegrityError:
+            error = True
+            status_code = 500
+            db.session.rollback()
+            print(sys.exc_info())
+
+        except ValueError:
+            error = True
+            status_code = 500
             db.session.rollback()
             print(sys.exc_info())
 
@@ -431,7 +446,7 @@ def create_app(test_config=None):
             db.session.close()
 
         if error:
-            abort(500)
+            abort(status_code)
 
         else:
             return jsonify({
@@ -493,6 +508,14 @@ def create_app(test_config=None):
             "error": 405,
             "message": "Method Not Allowed"
         }), 405
+
+    @app.errorhandler(500)
+    def internalserver(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "Internal Server Error"
+        }), 500
 
     @app.errorhandler(AuthError)
     def autherror(error):

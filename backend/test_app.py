@@ -95,7 +95,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
 #__________Test for error behavior of endpoint DELETE /movies/<movie_id>_______#
 
-    def test_delete_one_movie_401(self):
+    def test_delete_one_movie_403(self):
         res = self.client().delete(
             "/movies/1",
             headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
@@ -238,6 +238,46 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for success behavior of endpoint DELETE /actors/<actor_id>_____#
+
+    def test_delete_one_actor(self):
+        res = self.client().delete(
+            "/actors/1",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        drop_and_init_db(self.app)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertEqual([data["actor"]], ['1'])
+
+#__________Test for error behavior of endpoint DELETE /actors/<actor_id>_______#
+
+    def test_delete_one_actor_404(self):
+        res = self.client().delete(
+            "/actors/111234",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for error behavior of endpoint DELETE /actors/<actor_id>_______#
+
+    def test_delete_one_actor_403(self):
+        res = self.client().delete(
+            "/actors/1",
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 

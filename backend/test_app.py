@@ -50,10 +50,15 @@ class CastingAgencyTestCase(unittest.TestCase):
 #__________Test for error behavior of endpoint GET /movies_____________________#
 
     def test_get_all_movies_404(self):
-        self.client().delete("/movies/1", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
-        self.client().delete("/movies/2", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
-        self.client().delete("/movies/3", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
-        res = self.client().get("/movies", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
+        [self.client().delete(
+            "/movies/" + str(x),
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+            for x in [1,2,3]]
+        res = self.client().get(
+            "/movies",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
         drop_and_init_db(self.app)
         data = json.loads(res.data)
 
@@ -64,7 +69,10 @@ class CastingAgencyTestCase(unittest.TestCase):
 #__________Test for success behavior of endpoint DELETE /movies/<movie_id>_____#
 
     def test_delete_one_movie(self):
-        res = self.client().delete("/movies/1", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
+        res = self.client().delete(
+            "/movies/1",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
         drop_and_init_db(self.app)
         data = json.loads(res.data)
 
@@ -75,7 +83,10 @@ class CastingAgencyTestCase(unittest.TestCase):
 #__________Test for error behavior of endpoint DELETE /movies/<movie_id>_______#
 
     def test_delete_one_movie_404(self):
-        res = self.client().delete("/movies/111234", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
+        res = self.client().delete(
+            "/movies/111234",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -85,7 +96,10 @@ class CastingAgencyTestCase(unittest.TestCase):
 #__________Test for error behavior of endpoint DELETE /movies/<movie_id>_______#
 
     def test_delete_one_movie_401(self):
-        res = self.client().delete("/movies/1", headers={'Authorization': 'Bearer {}'.format(self.assistant_token)})
+        res = self.client().delete(
+            "/movies/1",
+            headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
+            )
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -120,27 +134,112 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
+#__________Test for error behavior of endpoint POST /movies/create_____________#
+
+    def test_create_one_movie_403(self):
+        res = self.client().post(
+            "/movies/create",
+            json={"title":"Casablanca"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for success behavior of endpoint PATCH /movies/<movie_id>______#
+
+    def test_update_one_movie(self):
+        res = self.client().patch(
+            "/movies/1",
+            json={"title":"Casablanca", "release_date":"2025-01-25 15:20:00"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue([data["movie"]])
+
+#__________Test for error behavior of endpoint PATCH /movies/<movie_id>______#
+
+    def test_update_one_movie_400(self):
+        res = self.client().patch(
+            "/movies/1",
+            json={"title":"Casablanca", "release_date":"2025"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
 #================ACTORS TESTS==================================================#
 
 #__________Test for success behavior of endpoint GET /actor/<actor_id>_________#
 
     def test_get_actor_id(self):
-        res = self.client().get("/actors/1", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
+        res = self.client().get(
+            "/actors/1", 
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
-        self.assertTrue(data["actor"]) 
+        self.assertTrue(data["actor"])
+
+#__________Test for error behavior of endpoint GET /actor/<actor_id>_________#
+
+    def test_get_actor_id(self):
+        res = self.client().get(
+            "/actors/101010101", 
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data["success"], False)
+        self.assertTrue(data["message"])
     
 #__________Test for success behavior of endpoint GET /actors___________________#
 
     def test_get_all_actors(self):
-        res = self.client().get("/actors", headers={'Authorization': 'Bearer {}'.format(self.producer_token)})
+        res = self.client().get(
+            "/actors",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertTrue([data["actor_details"]])
+
+#__________Test for error behavior of endpoint GET /actors_____________________#
+
+    def test_get_all_actors_404(self):
+        actors_res = self.client().get(
+            "/actors",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data_actors = json.loads(actors_res.data)
+        actors_list = [*range(1, data_actors["total_actors"] + 1)]
+        [self.client().delete(
+            "/actors/" + str(x),
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+            for x in actors_list]
+        res = self.client().get(
+            "/actors",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
 
 #================PERFORMANCE TESTS=============================================#
     

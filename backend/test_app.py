@@ -100,6 +100,7 @@ class CastingAgencyTestCase(unittest.TestCase):
             "/movies/1",
             headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
             )
+        drop_and_init_db(self.app)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -281,6 +282,76 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
+#__________Test for success behavior of endpoint POST /actors/create___________#
+
+    def test_create_one_actor(self):
+        res = self.client().post(
+            "/actors/create",
+            json={"name": "Alexa Colins", "age": 27, "gender": "female"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue([data["name"]])
+
+#__________Test for error behavior of endpoint POST /actors/create_____________#
+
+    def test_create_one_actor_400(self):
+        res = self.client().post(
+            "/actors/create",
+            json={"name":"Cisco Valmaro"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for error behavior of endpoint POST /actors/create_____________#
+
+    def test_create_one_actor_403(self):
+        res = self.client().post(
+            "/actors/create",
+            json={"name": "Maxim Gorski", "age": 37, "gender": "male"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for success behavior of endpoint PATCH /actors/<actor_id>______#
+
+    def test_update_one_actor(self):
+        res = self.client().patch(
+            "/actors/1",
+            json={"name": "John River", "age": 24, "gender": "male"}, 
+            headers={'Authorization': 'Bearer {}'.format(self.director_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue([data["name"]])
+
+#__________Test for error behavior of endpoint PATCH /actors/<actor_id>______#
+
+    def test_update_one_actor_422(self):
+        res = self.client().patch(
+            "/actors/1",
+            json={"name": "Alexa Colins", "age": "some age", "gender": 4}, 
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
 #================PERFORMANCE TESTS=============================================#
     
 #__________Test for success behavior of endpoint GET /performance______________#
@@ -293,7 +364,73 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertTrue(data["performance_details"])
         self.assertEqual(len(data["performance_details"]), 2)
         
-    
+#__________Test for error behavior of endpoint GET /performance________________#
+
+    def test_get_performance_404(self):
+        actors_res = self.client().get(
+            "/actors",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data_actors = json.loads(actors_res.data)
+        actors_list = [*range(1, data_actors["total_actors"] + 1)]
+        [self.client().delete(
+            "/actors/" + str(x),
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+            for x in actors_list]
+        res = self.client().get(
+            "/performances",
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        drop_and_init_db(self.app)
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertTrue(data["message"])
+        self.assertEqual(data["success"], False)
+
+#__________Test for success behavior of endpoint POST /performance_____________#
+
+    def test_create_one_performance(self):
+        res = self.client().post(
+            "/performance",
+            json={"actor_id": 1, "movie_id": 2}, 
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+        self.assertTrue([data["actor_id"]])
+        self.assertTrue([data["movie_id"]])
+
+#__________Test for error behavior of endpoint POST /performance_______________#
+
+    def test_create_one_performance_400(self):
+        res = self.client().post(
+            "/performance",
+            json={"actor_id": 1}, 
+            headers={'Authorization': 'Bearer {}'.format(self.producer_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
+
+#__________Test for error behavior of endpoint POST /performance_______________#
+
+    def test_create_one_performance_403(self):
+        res = self.client().post(
+            "/performance",
+            json={"actor_id": 1, "movie_id": 3}, 
+            headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
+            )
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data["success"], False)
+        self.assertTrue([data["message"]])
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

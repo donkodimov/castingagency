@@ -95,12 +95,24 @@ def create_app(test_config=None):
     @requires_auth('get:movies')
     def get_movie(payload, movie_id):
 
-        movie = Movie.query.get(movie_id)
-
+        error = False
+        try:
+            movie = Movie.query.get(movie_id)
+            movies = Movie.query.order_by('id').all()
+            actors = Actor.query.order_by('id').all()
+        
+        except DataError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+        
+        if error:
+            abort(status_code)
+        
         return render_template('index.html',
-            movies=Movie.query.order_by('id').all(),
-            active_movie=Movie.query.get(movie_id),
-            actors=Actor.query.order_by('id').all()
+            movies = movies,
+            actors = actors
             )
 
 
@@ -118,6 +130,12 @@ def create_app(test_config=None):
             body['title'] = movie.title
         
         except KeyError:
+            error = True
+            status_code = 400
+            db.session.rollback()
+            print(sys.exc_info())
+
+        except DataError:
             error = True
             status_code = 400
             db.session.rollback()
@@ -414,9 +432,17 @@ def create_app(test_config=None):
         try:
             actor_id = request.get_json()['actor_id']
             movie_id = request.get_json()['movie_id']
-            performance = Performance.insert().values(actor_id=actor_id, movie_id=movie_id)
-            db.session.execute(performance)
-            db.session.commit()
+
+            performance_exist = db.session.query(Performance).filter_by(actor_id = actor_id, movie_id = movie_id).first()
+            if performance_exist is not None:
+                return jsonify({
+                    "success": False,
+                    "message": "There is a performance with this actor and movie already.",
+                }), 400
+            else:
+                performance = Performance.insert().values(actor_id=actor_id, movie_id=movie_id)
+                db.session.execute(performance)
+                db.session.commit()
 
         except KeyError:
             error = True

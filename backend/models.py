@@ -7,7 +7,7 @@ import json
 
 from config import settings
 
-database_name = "castingagency"
+database_name = settings.POSTGRES_DB
 database_path = settings.DATABASE_URI
 if database_path.startswith("postgres://"):
   database_path = database_path.replace("postgres://", "postgresql://", 1)
@@ -77,11 +77,17 @@ def drop_and_init_db(app):
           )
       third_actor.insert()
 
-      first_performance = performance.insert().values(
+      first_performance = Performance.insert().values(
           actor_id=3, 
           movie_id=1
           )
+      
+      second_performance = Performance.insert().values(
+          actor_id=2, 
+          movie_id=2
+          )
       db.session.execute(first_performance)
+      db.session.execute(second_performance)
       db.session.commit()
 
 
@@ -91,9 +97,10 @@ Performance
 This table associates the Movie model and the Actor model.
 '''
 
-performance = db.Table('performance',
-    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), primary_key=True),
-    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), primary_key=True)
+Performance = db.Table('performance',
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id', ondelete='CASCADE'), nullable=False),
+    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id', ondelete='CASCADE'), nullable=False)
 )   
 
 '''
@@ -140,7 +147,7 @@ class Movie(db.Model):
   id = Column(Integer, primary_key=True)
   title = Column(String, nullable = False)
   release_date = Column(DateTime, default=datetime.now(), nullable=False)
-  actor = db.relationship('Actor', secondary=performance, lazy='select', backref=db.backref('movies', lazy=True))
+  actor = db.relationship('Actor', secondary=Performance, lazy='select', backref=db.backref('movies', lazy=True))
 
   def __init__(self, title, release_date):
     self.title = title

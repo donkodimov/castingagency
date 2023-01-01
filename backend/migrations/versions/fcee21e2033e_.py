@@ -22,8 +22,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('actor_id', sa.Integer(), nullable=False),
     sa.Column('movie_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['actor_id'], ['actors.id'], ),
-    sa.ForeignKeyConstraint(['movie_id'], ['movies.id'], ),
+    sa.ForeignKeyConstraint(['actor_id'], ['actors.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['movie_id'], ['movies.id'], ondelete='CASCADE' ),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('actors', schema=None) as batch_op:

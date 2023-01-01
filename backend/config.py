@@ -14,4 +14,13 @@ class Settings:
     POSTGRES_DB : str = os.getenv("POSTGRES_DB","tdd")
     DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
+    AUTH0_DOMAIN : str = os.getenv("AUTH0_DOMAIN")
+    ALGORITHMS : str = os.getenv("ALGORITHMS")
+    API_AUDIENCE = str = os.getenv("API_AUDIENCE")
+
+    PRODUCER = str = os.getenv("PRODUCER")
+    DIRECTOR = str = os.getenv("DIRECTOR")
+    ASSISTANT = str = os.getenv("ASSISTANT")
+    POSTGRES_DB_TEST : str = os.getenv("POSTGRES_DB_TEST","tdd")
+
 settings = Settings()

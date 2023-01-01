@@ -99,8 +99,8 @@ This table associates the Movie model and the Actor model.
 
 Performance = db.Table('performance',
     db.Column('id', db.Integer, primary_key=True),
-    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), nullable=False),
-    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), nullable=False)
+    db.Column('actor_id', db.Integer, db.ForeignKey('actors.id', ondelete='CASCADE'), nullable=False),
+    db.Column('movie_id', db.Integer, db.ForeignKey('movies.id', ondelete='CASCADE'), nullable=False)
 )   
 
 '''

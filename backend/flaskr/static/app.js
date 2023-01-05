@@ -12,9 +12,12 @@ window.addEventListener('load', function() {
   apiButton.addEventListener('click', async () => {
       let endpointFin = endpoint.value
 
-      if (endpointFin == 'other') {
+      if ( endpointFin == 'other' ) {
         document.getElementById('output').innerHTML = "Check API Referrance for other calls."
-      } else {
+      } else if ( endpointFin == 0 ) {
+          document.getElementById('output').innerHTML = "Select one API endpoint ..."
+      }
+        else {
         fetch(`${endpointFin}`, {
           method: 'GET',
           headers: {

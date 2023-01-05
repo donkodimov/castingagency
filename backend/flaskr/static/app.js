@@ -12,7 +12,10 @@ window.addEventListener('load', function() {
   apiButton.addEventListener('click', async () => {
       let endpointFin = endpoint.value
 
-      fetch(`${endpointFin}`, {
+      if (endpointFin == 'other') {
+        document.getElementById('output').innerHTML = "Check API Referrance for other calls."
+      } else {
+        fetch(`${endpointFin}`, {
           method: 'GET',
           headers: {
               "Content-Type": "application/json",
@@ -31,6 +34,8 @@ window.addEventListener('load', function() {
       }).catch(function(error) {
           console.log(error)
       });
+      }
+      
       
 });
 });

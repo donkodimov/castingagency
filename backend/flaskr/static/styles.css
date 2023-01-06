@@ -3,10 +3,13 @@
 }
 
 body {
-    background: #f5f6f7;
-    color: #1b1b32;
+    color: #f5f6f7;
+    background-color: #1b1b32;
     font-family: Helvetica;
     margin: 0;
+    width: 100%;
+    height: 100vh;
+    font-size: 16px;
   }
 
   header {
@@ -20,6 +23,39 @@ body {
     top: 0;
   }
 
+  fieldset {
+    border: none;
+    padding: 2rem 0;
+    border-bottom: 3px solid #3b3b4f;
+  }
+  
+  fieldset:last-of-type {
+    border-bottom: none;
+  }
+
+  label {
+    display: block;
+    margin: 0.5rem 0;
+  }
+
+  div {
+    width: 60vw;
+    max-width: 500px;
+    min-width: 300px;
+    margin: 0 auto;
+    padding-bottom: 2em;
+  }
+
+  textarea,
+  select {
+    margin: 10px 0 0 0;
+    width: 100%;
+    min-height: 2em;
+    background-color: #0a0a23;
+    border: 1px solid #0a0a23;
+    color: #ffffff;
+  }
+
   #logo {
     width: max(100px, 18vw);
     background-color: #0a0a23;
@@ -27,9 +63,8 @@ body {
     padding: 0.4rem;
   }
 
-  h1 {
-    color: #f1be32;
-    font-size: min(5vw, 1.2em);
+  h1, p {
+    margin: 1em auto;
     text-align: center;
   }
 
@@ -40,8 +75,21 @@ body {
 
   nav {
     width: 50%;
-    max-width: 300px;
+    max-width: 500px;
+    min-width: 300px;
     height: 50px;
+    margin: 0 auto;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    margin: 1em auto;
+    height: 2em;
+    font-size: 1.1rem;
+    background-color: #3b3b4f;
+    border-color: white;
+    min-width: 300px;
   }
 
   .form {

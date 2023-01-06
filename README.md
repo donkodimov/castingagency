@@ -32,6 +32,19 @@ The frontend of the application has the following functionality:
 2. Logout: users can log out of the application.
 3. View actors and movies: users can view a list of actors or movies and their details by calling the appropriate API endpoint.
 
+Authentication with Auth0 and RBAC
+
+1. Sign up for a free account on the Auth0 website (https://auth0.com/).
+2. Create a new application in your Auth0 dashboard. You will need to choose a name for your application and select the "Single Page Web Applications" option.
+3. Configure the application settings. In the "Allowed Callback URLs" field, enter the URL of your application where users will be redirected after logging in. You should also specify any other URLs that will be used as part of the authentication process, such as the URL for logging out.
+4. In the application settings, enable the "RBAC" toggle. This will enable role-based access control for the application.
+5. In the "Roles" tab, create any roles that you want to use in your application. For example, you might create a "Producer" role for users with administrative privileges, a "Director" role for regular users and an "Assitant" role for restricted access only.
+6. In the "Users" tab, create any users that you want to use in your application. Assign each user the appropriate role(s).
+7. You will also need to implement the login and logout functionality, and protect any routes or resources that should only be accessible to authenticated users. Change the login and logout link in the index.html with your AUTH0_DOMAIN, Allowed Callback URL(redirect_uri for login button), Allowed Logout URL(redirect_uri for logout button), audience, client_id.
+
+
+Once you have completed these steps, your application will be able to authenticate users using the Auth0 platform. Users will be able to log in using the login flow you have configured, and your application will be able to validate their JWTs to ensure that they are authenticated.
+
 ## Geting started
 ### Installing Dependancies
 

@@ -25,20 +25,16 @@ window.addEventListener('load', function() {
               "Authorization": "Bearer " + accessToken
               },
       }).then(function(response) {
-          if (response.status === 200) {
-              return response.json()
-              
-          } else {
-              console.log("error")
-          }
+          return response.json()
+          
       }).then(function(data) {
       // The request was successful, so render the data in the output element
          document.getElementById('output').innerHTML = JSON.stringify(data, null, 2);
+      
       }).catch(function(error) {
           console.log(error)
+          
       });
       }
-      
-      
 });
 });

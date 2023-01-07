@@ -133,9 +133,9 @@ The API will return these error types when requests fail:
 #### Request
 
 `GET /movies`
-```
+```bash
     curl http://127.0.0.1:5000/movies
-````
+```
 
 #### Success Response:
 
@@ -190,6 +190,7 @@ The API will return these error types when requests fail:
 
 ```json
 {
+    "error": 404,
     "success": false,
     "message": "No records were found"
 }
@@ -201,7 +202,7 @@ The API will return these error types when requests fail:
 #### Request
 
 `GET /movies/<movie_id>`
-```
+```bash
     curl http://127.0.0.1:5000/movies/<movie_id>
 ```
 
@@ -225,7 +226,9 @@ The API will return these error types when requests fail:
 
 ```json
 {
-    "error": "Bad request"
+    "error": 400,
+    "success": false,
+    "message": "Bad request"
 }
 ```
 
@@ -234,7 +237,7 @@ The API will return these error types when requests fail:
 #### Request
 
 `POST /movies/create`
-```
+```bash
   curl -X POST \
     http://localhost:5000/movies/create \
     -H 'Authorization: Bearer <YOUR_JWT>' \
@@ -266,6 +269,7 @@ The API will return these error types when requests fail:
 
 ```json
 {
+    "error": 400,
     "success": false,
     "message": "Bad request"
 }
@@ -276,6 +280,7 @@ The API will return these error types when requests fail:
 
 ```json
 {
+    "error": 500,
     "success": false,
     "message": "Internal Server Error"
 }
@@ -286,7 +291,7 @@ The API will return these error types when requests fail:
 #### Request
 
 `DELETE /movies/<movie_id>`
-```
+```bash
   curl -X DELETE \
     http://localhost:5000/movies/<movie_id> \
     -H 'Authorization: Bearer <YOUR_JWT>'
@@ -312,6 +317,7 @@ The API will return these error types when requests fail:
 
 ```json
 {
+    "error": 404,
     "success": false,
     "message": "No records were found"
 }
@@ -322,7 +328,7 @@ The API will return these error types when requests fail:
 #### Request
 
 `PATCH /movies/<movie_id>`
-```
+```bash
   curl -X PATCH \
     http://localhost:5000/movies/<movie_id> \
     -H 'Authorization: Bearer <YOUR_JWT>' \
@@ -353,6 +359,7 @@ The API will return these error types when requests fail:
 
 ```json
 {
+    "error": 400,
     "success": false,
     "message": "Bad request"
 }
@@ -363,6 +370,7 @@ The API will return these error types when requests fail:
 
 ```json
 {
+    "error": 500,
     "success": false,
     "message": "Internal Server Error"
 }

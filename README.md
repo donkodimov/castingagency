@@ -133,8 +133,9 @@ The API will return these error types when requests fail:
 #### Request
 
 `GET /movies`
-
+```
     curl http://127.0.0.1:5000/movies
+````
 
 #### Success Response:
 
@@ -191,5 +192,178 @@ The API will return these error types when requests fail:
 {
     "success": false,
     "message": "No records were found"
+}
+```
+
+
+### Get one movies
+
+#### Request
+
+`GET /movies/<movie_id>`
+```
+    curl http://127.0.0.1:5000/movies/<movie_id>
+```
+
+#### Success Response:
+
+* Code: 200
+* Content:
+
+```json
+{
+    "success": true,
+    "id": 5,
+    "title": "Jurasic Park"
+}
+```
+
+#### Error Response:
+
+* Code: 400
+* Content:
+
+```json
+{
+    "error": "Bad request"
+}
+```
+
+### Edit movie
+
+#### Request
+
+`POST /movies/create`
+```
+  curl -X POST \
+    http://localhost:5000/movies/create \
+    -H 'Authorization: Bearer <YOUR_JWT>' \
+    -H 'Content-Type: application/json' \
+    -d '{
+	    "title": "Movie 1",
+	    "release_date": "2020-01-01"
+    }'
+```
+
+
+#### Success Response:
+
+* Code: 200
+* Content:
+
+```json
+{
+    "success": true,
+    "id": 5,
+    "title": "Jurasic Park"
+}
+```
+
+#### Error Response:
+
+* Code: 400
+* Content:
+
+```json
+{
+    "success": false,
+    "message": "Bad request"
+}
+```
+
+* Code: 500
+* Content:
+
+```json
+{
+    "success": false,
+    "message": "Internal Server Error"
+}
+```
+
+### Delete movie
+
+#### Request
+
+`DELETE /movies/<movie_id>`
+```
+  curl -X DELETE \
+    http://localhost:5000/movies/<movie_id> \
+    -H 'Authorization: Bearer <YOUR_JWT>'
+```
+
+
+#### Success Response:
+
+* Code: 200
+* Content:
+
+```json
+{
+    "success": true,
+    "movie": 5
+}
+```
+
+#### Error Response:
+
+* Code: 404
+* Content:
+
+```json
+{
+    "success": false,
+    "message": "No records were found"
+}
+```
+
+### Update movie
+
+#### Request
+
+`PATCH /movies/<movie_id>`
+```
+  curl -X PATCH \
+    http://localhost:5000/movies/<movie_id> \
+    -H 'Authorization: Bearer <YOUR_JWT>' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "title": "Water7"
+        }'
+```
+
+
+#### Success Response:
+
+* Code: 200
+* Content:
+
+```json
+{
+    "success": true,
+    "movie": "New Movie name",
+    "release_date": "2022-09-09"
+}
+```
+
+#### Error Response:
+
+* Code: 400
+* Content:
+
+```json
+{
+    "success": false,
+    "message": "Bad request"
+}
+```
+
+* Code: 500
+* Content:
+
+```json
+{
+    "success": false,
+    "message": "Internal Server Error"
 }
 ```

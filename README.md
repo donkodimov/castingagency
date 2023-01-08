@@ -4,25 +4,25 @@ This project is a web application that allows users to view and manage data for 
 
 Features:
 
-* View a list of actors and movies
-* Add new actors and movies
-* Update existing actors and movies
-* Delete actors and movies
-* Assign actors to movies
+- View a list of actors and movies
+- Add new actors and movies
+- Update existing actors and movies
+- Delete actors and movies
+- Assign actors to movies
 
 Endpoints:
 
-* GET /actors: returns a list of all actors
-* GET /actors/<actor_id>: returns a list of all actors
-* POST /actors: creates a new actor
-* PATCH /actors/<actor_id>: updates an existing actor
-* DELETE /actors/<actor_id>: deletes an existing actor
-* GET /movies: returns a list of all movies
-* POST /movies: creates a new movie
-* PATCH /movies/<movie_id>: updates an existing movie
-* DELETE /movies/<movie_id>: deletes an existing movie
-* POST /performance: assigns an actor to a movie
-* DELETE /performance: removes an actor from a movie
+- GET /actors: returns a list of all actors
+- GET /actors/<actor_id>: returns a list of all actors
+- POST /actors: creates a new actor
+- PATCH /actors/<actor_id>: updates an existing actor
+- DELETE /actors/<actor_id>: deletes an existing actor
+- GET /movies: returns a list of all movies
+- POST /movies: creates a new movie
+- PATCH /movies/<movie_id>: updates an existing movie
+- DELETE /movies/<movie_id>: deletes an existing movie
+- POST /performance: assigns an actor to a movie
+- DELETE /performance: removes an actor from a movie
 
 Frontend Functionality
 
@@ -42,45 +42,54 @@ Authentication with Auth0 and RBAC
 6. In the "Users" tab, create any users that you want to use in your application. Assign each user the appropriate role(s).
 7. You will also need to implement the login and logout functionality, and protect any routes or resources that should only be accessible to authenticated users. Change the login and logout link in the index.html with your AUTH0_DOMAIN, Allowed Callback URL(redirect_uri for login button), Allowed Logout URL(redirect_uri for logout button), audience, client_id.
 
-
 Once you have completed these steps, your application will be able to authenticate users using the Auth0 platform. Users will be able to log in using the login flow you have configured, and your application will be able to validate their JWTs to ensure that they are authenticated.
 
 ## Geting started
+
 ### Installing Dependancies
 
 #### Python 3.10
+
 Follow instructions to install the latest version of python for your platform in the python docs
 
 #### Virtual Enviornment
+
 Working within a virtual environment is recommended.
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 #### PIP Dependencies
+
 Navigate to the root directory and run:
 
 ```bash
 pip install -r requirements.txt
 ```
+
 This will install all of the required packages in the requirements.txt file.
 
 #### Key Dependencies
-* Flask is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-* SQLAlchemy is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py.
+- Flask is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-* Flask-CORS is the extension we'll use to handle cross origin requests from our frontend server.
+- SQLAlchemy is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py.
+
+- Flask-CORS is the extension we'll use to handle cross origin requests from our frontend server.
 
 ## Database Setup
+
 With Postgres running, create empty database and restore a database using the castingagency.psql file provided. From the backend folder in terminal run:
 
 ```bash
 createdb castingagency
 psql trivia < castingagency.psql
 ```
+
 ### Running the server
+
 From within the backend directory
 
 To run the server, execute:
@@ -97,25 +106,28 @@ flask run
 
 ## Getting Started
 
-* Backend Base URL: ```http://127.0.0.1:5000/```
+- Backend Base URL: `http://127.0.0.1:5000/`
 
 ### Authentication
 
 There are 3 type of accounts based on the actions a user can perform:
 
-* Casting Assitant ( can GET requests)
-* Casting Director ( can GET, POST, PATCH requests)
-* Managing Director ( can GET, POST, PATCH, DELETE requests)
+- Casting Assitant ( can GET requests)
+- Casting Director ( can GET, POST, PATCH requests)
+- Managing Director ( can GET, POST, PATCH, DELETE requests)
 
 ### Error Handling
+
 Errors are returned as JSON objects in the following format:
+
 ```json
 {
-    "success": False, 
+    "success": False,
     "error": 404,
     "message": "Resource Not Found"
 }
 ```
+
 The API will return these error types when requests fail:
 
 - 400: Bad Request
@@ -133,102 +145,103 @@ The API will return these error types when requests fail:
 #### Request
 
 `GET /movies`
+
 ```bash
     curl http://127.0.0.1:5000/movies
 ```
 
 #### Success Response:
 
-* Code: 200
-* Content:
+- Code: 200
+- Content:
 
 ```json
 {
-    "success": true,
-    "movie_details": [
+  "success": true,
+  "movie_details": [
+    {
+      "actors": [
         {
-            "actors": [
-                {
-                    "actor_id": 1,
-                    "actor_name": "John Doe",
-                    "actor_age": 30,
-                    "actor_gender": "Male"
-                },
-                {
-                    "actor_id": 2,
-                    "actor_name": "Jane Doe",
-                    "actor_age": 25,
-                    "actor_gender": "Female"
-                }
-            ],
-            "movie_id": 1,
-            "movie_title": "Movie 1",
-            "movie_release_date": "January 01 2020 00:00:00"
+          "actor_id": 1,
+          "actor_name": "John Doe",
+          "actor_age": 30,
+          "actor_gender": "Male"
         },
         {
-            "actors": [
-                {
-                    "actor_id": 3,
-                    "actor_name": "Bob Smith",
-                    "actor_age": 35,
-                    "actor_gender": "Male"
-                }
-            ],
-            "movie_id": 2,
-            "movie_title": "Movie 2",
-            "movie_release_date": "February 01 2020 00:00:00"
+          "actor_id": 2,
+          "actor_name": "Jane Doe",
+          "actor_age": 25,
+          "actor_gender": "Female"
         }
-    ],
-    "total actors": 2
+      ],
+      "movie_id": 1,
+      "movie_title": "Movie 1",
+      "movie_release_date": "January 01 2020 00:00:00"
+    },
+    {
+      "actors": [
+        {
+          "actor_id": 3,
+          "actor_name": "Bob Smith",
+          "actor_age": 35,
+          "actor_gender": "Male"
+        }
+      ],
+      "movie_id": 2,
+      "movie_title": "Movie 2",
+      "movie_release_date": "February 01 2020 00:00:00"
+    }
+  ],
+  "total actors": 2
 }
 ```
 
 #### Error Response:
 
-* Code: 404
-* Content:
+- Code: 404
+- Content:
 
 ```json
 {
-    "error": 404,
-    "success": false,
-    "message": "No records were found"
+  "error": 404,
+  "success": false,
+  "message": "No records were found"
 }
 ```
-
 
 ### Get one movies
 
 #### Request
 
 `GET /movies/<movie_id>`
+
 ```bash
     curl http://127.0.0.1:5000/movies/<movie_id>
 ```
 
 #### Success Response:
 
-* Code: 200
-* Content:
+- Code: 200
+- Content:
 
 ```json
 {
-    "success": true,
-    "id": 5,
-    "title": "Jurasic Park"
+  "success": true,
+  "id": 5,
+  "title": "Jurasic Park"
 }
 ```
 
 #### Error Response:
 
-* Code: 400
-* Content:
+- Code: 400
+- Content:
 
 ```json
 {
-    "error": 400,
-    "success": false,
-    "message": "Bad request"
+  "error": 400,
+  "success": false,
+  "message": "Bad request"
 }
 ```
 
@@ -237,6 +250,7 @@ The API will return these error types when requests fail:
 #### Request
 
 `POST /movies/create`
+
 ```bash
   curl -X POST \
     http://localhost:5000/movies/create \
@@ -248,41 +262,40 @@ The API will return these error types when requests fail:
     }'
 ```
 
-
 #### Success Response:
 
-* Code: 200
-* Content:
+- Code: 200
+- Content:
 
 ```json
 {
-    "success": true,
-    "id": 5,
-    "title": "Jurasic Park"
+  "success": true,
+  "id": 5,
+  "title": "Jurasic Park"
 }
 ```
 
 #### Error Response:
 
-* Code: 400
-* Content:
+- Code: 400
+- Content:
 
 ```json
 {
-    "error": 400,
-    "success": false,
-    "message": "Bad request"
+  "error": 400,
+  "success": false,
+  "message": "Bad request"
 }
 ```
 
-* Code: 500
-* Content:
+- Code: 500
+- Content:
 
 ```json
 {
-    "error": 500,
-    "success": false,
-    "message": "Internal Server Error"
+  "error": 500,
+  "success": false,
+  "message": "Internal Server Error"
 }
 ```
 
@@ -291,35 +304,35 @@ The API will return these error types when requests fail:
 #### Request
 
 `DELETE /movies/<movie_id>`
+
 ```bash
   curl -X DELETE \
     http://localhost:5000/movies/<movie_id> \
     -H 'Authorization: Bearer <YOUR_JWT>'
 ```
 
-
 #### Success Response:
 
-* Code: 200
-* Content:
+- Code: 200
+- Content:
 
 ```json
 {
-    "success": true,
-    "movie": 5
+  "success": true,
+  "movie": 5
 }
 ```
 
 #### Error Response:
 
-* Code: 404
-* Content:
+- Code: 404
+- Content:
 
 ```json
 {
-    "error": 404,
-    "success": false,
-    "message": "No records were found"
+  "error": 404,
+  "success": false,
+  "message": "No records were found"
 }
 ```
 
@@ -328,6 +341,7 @@ The API will return these error types when requests fail:
 #### Request
 
 `PATCH /movies/<movie_id>`
+
 ```bash
   curl -X PATCH \
     http://localhost:5000/movies/<movie_id> \
@@ -338,40 +352,403 @@ The API will return these error types when requests fail:
         }'
 ```
 
-
 #### Success Response:
 
-* Code: 200
-* Content:
+- Code: 200
+- Content:
 
 ```json
 {
-    "success": true,
-    "movie": "New Movie name",
-    "release_date": "2022-09-09"
+  "success": true,
+  "movie": "New Movie name",
+  "release_date": "2022-09-09"
 }
 ```
 
 #### Error Response:
 
-* Code: 400
-* Content:
+- Code: 400
+- Content:
 
 ```json
 {
-    "error": 400,
-    "success": false,
-    "message": "Bad request"
+  "error": 400,
+  "success": false,
+  "message": "Bad request"
 }
 ```
 
-* Code: 500
-* Content:
+- Code: 500
+- Content:
 
 ```json
 {
-    "error": 500,
-    "success": false,
-    "message": "Internal Server Error"
+  "error": 500,
+  "success": false,
+  "message": "Internal Server Error"
+}
+```
+
+### Get all actors
+
+#### Request
+
+`GET /actors`
+
+```bash
+    curl http://127.0.0.1:5000/actors
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+  "success": true,
+  "actor_details": [
+    {
+      "actor_age": 26,
+      "actor_gender": "Male",
+      "actor_id": 1,
+      "actor_name": "Arturo Valdes",
+      "casting:": []
+    },
+    {
+      "actor_age": 34,
+      "actor_gender": "Female",
+      "actor_id": 2,
+      "actor_name": "Viki Jones",
+      "casting:": [
+        {
+          "movie_id": 2,
+          "movie_release_date": "January 25 2023 15:20:00",
+          "movie_title": "Messi's Way"
+        }
+      ]
+    },
+    {
+      "actor_age": 12,
+      "actor_gender": "Male",
+      "actor_id": 3,
+      "actor_name": "Goran Snipe",
+      "casting:": [
+        {
+          "movie_id": 1,
+          "movie_release_date": "January 25 2023 15:20:00",
+          "movie_title": "Rainy Temple"
+        }
+      ]
+    }
+  ],
+  "success": true,
+  "total_actors": 3
+}
+```
+
+#### Error Response:
+
+- Code: 404
+- Content:
+
+```json
+{
+  "error": 404,
+  "success": false,
+  "message": "No records were found"
+}
+```
+
+### Get one actor
+
+#### Request
+
+`GET /actors/<movie_id>`
+
+```bash
+    curl http://127.0.0.1:5000/actors/<actor_id>
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+  "success": true,
+  "id": 5,
+  "actor": "Goran Snipe"
+}
+```
+
+#### Error Response:
+
+- Code: 400
+- Content:
+
+```json
+{
+  "error": 404,
+  "success": false,
+  "message": "No records found"
+}
+```
+
+### Create actor
+
+#### Request
+
+`POST /actors/create`
+
+```bash
+  curl -X POST \
+    http://localhost:5000/actors/create \
+    -H 'Authorization: Bearer <YOUR_JWT>' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "name": "New Actor name",
+        "age": 77,
+        "gender": "Male"
+    }'
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+  "success": true,
+  "id": 5,
+  "name": "New Actor name"
+}
+```
+
+#### Error Response:
+
+- Code: 400
+- Content:
+
+```json
+{
+  "error": 400,
+  "success": false,
+  "message": "Bad request"
+}
+```
+
+- Code: 500
+- Content:
+
+```json
+{
+  "error": 500,
+  "success": false,
+  "message": "Internal Server Error"
+}
+```
+
+### Delete actor
+
+#### Request
+
+`DELETE /actors/<actor_id>`
+
+```bash
+  curl -X DELETE \
+    http://localhost:5000/actors/<actor_id> \
+    -H 'Authorization: Bearer <YOUR_JWT>'
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+  "success": true,
+  "actor": 5
+}
+```
+
+#### Error Response:
+
+- Code: 404
+- Content:
+
+```json
+{
+  "error": 404,
+  "success": false,
+  "message": "No records were found"
+}
+```
+
+### Update actor
+
+#### Request
+
+`PATCH /actors/<actor_id>`
+
+```bash
+  curl -X PATCH \
+    http://localhost:5000/actors/<actor_id> \
+    -H 'Authorization: Bearer <YOUR_JWT>' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "name": "New name",
+        "age": 17,
+        "gender": "female"
+    }'
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+  "success": true,
+  "name": "New name",
+  "age": 17,
+  "gender": "female"
+}
+```
+
+#### Error Response:
+
+- Code: 400
+- Content:
+
+```json
+{
+  "error": 400,
+  "success": false,
+  "message": "Bad request"
+}
+```
+
+- Code: 500
+- Content:
+
+```json
+{
+  "error": 500,
+  "success": false,
+  "message": "Internal Server Error"
+}
+```
+
+### Get all casts
+
+#### Request
+
+`GET /performances`
+
+```bash
+    curl http://127.0.0.1:5000/performances
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+  "success": true,
+  "performance_details": [
+        {
+            "actor_age": 12,
+            "actor_gender": "Male",
+            "actor_id": 3,
+            "actor_name": "Goran Snipe",
+            "movie_id": 1,
+            "movie_release_date": "January 25 2023 15:20:00",
+            "movie_title": "Rainy Temple"
+        },
+        {
+            "actor_age": 34,
+            "actor_gender": "Female",
+            "actor_id": 2,
+            "actor_name": "Viki Jones",
+            "movie_id": 2,
+            "movie_release_date": "January 25 2023 15:20:00",
+            "movie_title": "Messi's Way"
+        }
+    ],
+    "success": true,
+    "total_performances": 2
+}
+```
+
+#### Error Response:
+
+- Code: 422
+- Content:
+
+```json
+{
+  "error": 404,
+  "success": false,
+  "message": "Unprocessable"
+}
+```
+
+### Create new casts
+
+#### Request
+
+`POST /performances`
+
+```bash
+    curl -X POST http://127.0.0.1:5000/performances \
+        -H 'Authorization: <YOUR_JWT>' \
+        -H 'Content-Type: application/json' \
+        -d '{
+                "actor_id": 1,
+                "movie_id": 2
+            }'
+```
+
+#### Success Response:
+
+- Code: 200
+- Content:
+
+```json
+{
+    "actor_id": 1,
+    "movie_id": 2,
+    "success": true
+}
+```
+
+#### Error Response:
+
+- Code: 400
+- Content:
+
+```json
+{
+  "error": 400,
+  "success": false,
+  "message": "There is a performance with this actor and movie already."
+}
+```
+
+- Code: 500
+- Content:
+
+```json
+{
+  "error": 500,
+  "success": false,
+  "message": "Internal server error"
 }
 ```

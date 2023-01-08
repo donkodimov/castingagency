@@ -15,8 +15,11 @@ class Settings:
     DATABASE_URI = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
     AUTH0_DOMAIN : str = os.getenv("AUTH0_DOMAIN")
+    AUTH0_CLIENT_ID : str = os.getenv("AUTH0_CLIENT_ID")
+    AUTH0_CLIENT_SECRET : str = os.getenv("AUTH0_CLIENT_SECRET")
     ALGORITHMS : str = os.getenv("ALGORITHMS")
     API_AUDIENCE = str = os.getenv("API_AUDIENCE")
+    BASE_URL = os.getenv("BASE_URL")
 
     PRODUCER = str = os.getenv("PRODUCER")
     DIRECTOR = str = os.getenv("DIRECTOR")

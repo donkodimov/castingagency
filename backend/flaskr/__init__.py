@@ -1,4 +1,4 @@
-import os, sys
+import sys, os
 from flask import Flask, request, abort, jsonify, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import DataError, IntegrityError
@@ -16,6 +16,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     setup_db(app)
     CORS(app, resources={r"*": {"origins": "*"}})
+    os.environ['FLASK_DEBUG'] = '1'
 
     drop_and_init_db(app)
 
@@ -37,7 +38,7 @@ def create_app(test_config=None):
 
     @app.route("/")
     def index():
-        return redirect(url_for('get_movie', movie_id=1))
+        return render_template('index.html')
        
 
 #  Movies
@@ -97,9 +98,7 @@ def create_app(test_config=None):
 
         error = False
         try:
-            movie = Movie.query.get(movie_id)
-            movies = Movie.query.order_by('id').all()
-            actors = Actor.query.order_by('id').all()
+            movie = Movie.query.filter(Movie.id == movie_id).first_or_404()
         
         except DataError:
             error = True
@@ -110,13 +109,14 @@ def create_app(test_config=None):
         if error:
             abort(status_code)
         
-        return render_template('index.html',
-            movies = movies,
-            actors = actors
-            )
+        return jsonify({
+                "success": True,
+                "id": movie.id,
+                "movie": movie.title
+            }), 200
 
 
-    @app.route("/movies/create", methods=['POST'])
+    @app.route("/movies", methods=['POST'])
     @requires_auth('post:movies')
     def create_movies(payload):
         error = False
@@ -294,7 +294,7 @@ def create_app(test_config=None):
             }), 200
 
 
-    @app.route("/actors/create", methods=['POST'])
+    @app.route("/actors", methods=['POST'])
     @requires_auth('post:actors')
     def create_actor(payload):
         error = False

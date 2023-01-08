@@ -245,15 +245,15 @@ The API will return these error types when requests fail:
 }
 ```
 
-### Edit movie
+### Create movie
 
 #### Request
 
-`POST /movies/create`
+`POST /movies`
 
 ```bash
   curl -X POST \
-    http://localhost:5000/movies/create \
+    http://localhost:5000/movies \
     -H 'Authorization: Bearer <YOUR_JWT>' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -500,11 +500,11 @@ The API will return these error types when requests fail:
 
 #### Request
 
-`POST /actors/create`
+`POST /actors`
 
 ```bash
   curl -X POST \
-    http://localhost:5000/actors/create \
+    http://localhost:5000/actors \
     -H 'Authorization: Bearer <YOUR_JWT>' \
     -H 'Content-Type: application/json' \
     -d '{

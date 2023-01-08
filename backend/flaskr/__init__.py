@@ -116,7 +116,7 @@ def create_app(test_config=None):
             }), 200
 
 
-    @app.route("/movies/create", methods=['POST'])
+    @app.route("/movies", methods=['POST'])
     @requires_auth('post:movies')
     def create_movies(payload):
         error = False
@@ -294,7 +294,7 @@ def create_app(test_config=None):
             }), 200
 
 
-    @app.route("/actors/create", methods=['POST'])
+    @app.route("/actors", methods=['POST'])
     @requires_auth('post:actors')
     def create_actor(payload):
         error = False

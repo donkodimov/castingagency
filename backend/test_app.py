@@ -126,12 +126,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
-#__________Test for success behavior of endpoint POST /movies/create___________#
+#__________Test for success behavior of endpoint POST /movies___________#
 
     def test_create_one_movie(self):
         '''Check if movies are created as expected with correct data'''
         res = self.client().post(
-            "/movies/create",
+            "/movies",
             json={"title":"Casablanca", "release_date":"2023-01-25 15:20:00"}, 
             headers={'Authorization': 'Bearer {}'.format(self.director_token)}
             )
@@ -141,12 +141,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue([data["title"]])
 
-#__________Test for error behavior of endpoint POST /movies/create_____________#
+#__________Test for error behavior of endpoint POST /movies_____________#
 
     def test_create_one_movie_400(self):
         '''Check if correct error is returned when movie release date is missing'''
         res = self.client().post(
-            "/movies/create",
+            "/movies",
             json={"title":"Casablanca"}, 
             headers={'Authorization': 'Bearer {}'.format(self.director_token)}
             )
@@ -156,12 +156,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
-#__________Test for error behavior of endpoint POST /movies/create_____________#
+#__________Test for error behavior of endpoint POST /movies_____________#
 
     def test_create_one_movie_403(self):
         '''Check if correct error is returned providing token without create permissions'''
         res = self.client().post(
-            "/movies/create",
+            "/movies",
             json={"title":"Casablanca"}, 
             headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
             )
@@ -313,12 +313,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
-#__________Test for success behavior of endpoint POST /actors/create___________#
+#__________Test for success behavior of endpoint POST /actors___________#
 
     def test_create_one_actor(self):
         '''Check if actor is created with correct data provided.'''
         res = self.client().post(
-            "/actors/create",
+            "/actors",
             json={"name": "Alexa Colins", "age": 27, "gender": "female"}, 
             headers={'Authorization': 'Bearer {}'.format(self.director_token)}
             )
@@ -328,12 +328,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertTrue([data["name"]])
 
-#__________Test for error behavior of endpoint POST /actors/create_____________#
+#__________Test for error behavior of endpoint POST /actors_____________#
 
     def test_create_one_actor_400(self):
         '''Check if correct error is returned when data is incorrect.'''
         res = self.client().post(
-            "/actors/create",
+            "/actors",
             json={"name":"Cisco Valmaro"}, 
             headers={'Authorization': 'Bearer {}'.format(self.director_token)}
             )
@@ -343,12 +343,12 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data["success"], False)
         self.assertTrue([data["message"]])
 
-#__________Test for error behavior of endpoint POST /actors/create_____________#
+#__________Test for error behavior of endpoint POST /actors_____________#
 
     def test_create_one_actor_403(self):
         '''Check if correct error is returned when token has no permission.'''
         res = self.client().post(
-            "/actors/create",
+            "/actors",
             json={"name": "Maxim Gorski", "age": 37, "gender": "male"}, 
             headers={'Authorization': 'Bearer {}'.format(self.assistant_token)}
             )
